@@ -29,19 +29,18 @@
                 android:id="@+id/textProfileTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
                 android:text="@string/profile_title"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="32sp" />
         </LinearLayout>
 
-        <!-- Контейнер фото профиля + инфо -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="24dp"
             android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:orientation="horizontal"
             android:gravity="start|center_vertical">
 
             <ImageView
@@ -49,35 +48,41 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_profile_placeholder"
-                android:contentDescription="@string/profile_image"
-                android:scaleType="centerCrop"
-                android:clipToOutline="true"
                 android:background="@drawable/circle_mask"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/profile_image"
+                android:clipToOutline="true"
                 android:outlineProvider="background"
                 android:layout_marginEnd="24dp" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/buttonChangePhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Иван Иванов"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/textUserEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ivan@example.com"
-                    android:textColor="?attr/colorSecondaryText"
-                    android:textSize="16sp"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
+                android:text="Изменить фото" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/editUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:hint="Ваше имя"
+            android:textColor="?attr/colorOnBackground"
+            android:textColorHint="?attr/colorSecondaryText"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editUserStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:hint="Статус"
+            android:textColor="?attr/colorOnBackground"
+            android:textColorHint="?attr/colorSecondaryText"
+            android:textSize="18sp" />
+
     </LinearLayout>
 </ScrollView>
