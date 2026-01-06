@@ -1,18 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?attr/colorBackground"
-    tools:context=".NewsFragment">
+    android:background="?attr/colorBackground">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="40dp"
         android:paddingTop="50dp"
-        android:paddingEnd="16dp"
         android:paddingBottom="16dp">
 
         <TextView
@@ -24,30 +23,33 @@
             android:textSize="32sp" />
 
         <TextView
-            android:id="@+id/newsTitle"
+            android:id="@+id/textNewsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/news_title"
             android:textColor="?attr/colorOnBackground"
-            android:textSize="32sp"
-            android:layout_marginTop="8dp"/>
+            android:textSize="32sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="140dp"
+        android:layout_marginBottom="72dp"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"/>
+        android:paddingEnd="16dp" />
 
-    <Button
-        android:id="@+id/btnRefresh"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fabRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Обновить"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:textColor="@android:color/white"
-        android:textAllCaps="false"/>
-</LinearLayout>
+        android:text="Обновить"
+        app:icon="@drawable/ic_refresh"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:cornerRadius="16dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

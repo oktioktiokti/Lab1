@@ -1,12 +1,16 @@
 package com.example.oktimessenger
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.example.oktimessenger.databinding.ActivityMainBinding
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate() called")
+        Log.d(TAG, "onCreate")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -31,33 +35,43 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        requestNotificationPermission()
+
+        setupPeriodicSync()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = android.Manifest.permission.POST_NOTIFICATIONS
+            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(permission), 1001)
+            }
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
-    }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
+    private fun setupPeriodicSync() {
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
+        val workRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(
+                15, TimeUnit.MINUTES
+            )
+                .setConstraints(constraints)
+                .build()
 
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniquePeriodicWork(
+                "sync_messages",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
+
+        Log.d(TAG, "Periodic WorkManager scheduled")
+    }
 }

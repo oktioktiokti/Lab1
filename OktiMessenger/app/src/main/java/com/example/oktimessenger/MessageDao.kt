@@ -4,9 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface MessageDao {
+
+    @Update
+    suspend fun updateMessage(message: MessageEntity)
 
     @Query("SELECT * FROM messages")
     suspend fun getAllMessages(): List<MessageEntity>
@@ -16,4 +20,6 @@ interface MessageDao {
 
     @Query("DELETE FROM messages")
     suspend fun clearMessages()
+
 }
+

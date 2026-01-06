@@ -6,16 +6,20 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.oktimessenger.databinding.FragmentNewsBinding
 
 class NewsFragment : Fragment() {
-
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: NewsViewModel by viewModels()
-    private val adapter = MessageAdapter()
+
+    private val adapter = MessageAdapter {
+        viewModel.likeMessage(it)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,24 +30,33 @@ class NewsFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        viewModel.messages.observe(viewLifecycleOwner) {
-            adapter.submitList(it.toList())  // создаём новый объект списка
+        viewModel.messages.observe(viewLifecycleOwner) { messages ->
+            adapter.submitList(messages)
         }
 
-        binding.btnRefresh.setOnClickListener {
-            Log.d("NewsFragment", "Refresh clicked") // проверка кнопки
+        if (viewModel.messages.value.isNullOrEmpty()) {
             viewModel.loadMessages()
         }
 
-        viewModel.loadMessages()  // начальная загрузка
+
+        binding.fabRefresh.setOnClickListener {
+            Log.d("NewsFragment", "FAB refresh clicked")
+
+            // Временный запуск WorkManager для проверки
+            val work = OneTimeWorkRequestBuilder<SyncWorker>().build()
+            WorkManager.getInstance(requireContext()).enqueue(work)
+        }
+
+        viewModel.loadMessages()
 
         return binding.root
-    }
 
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
+

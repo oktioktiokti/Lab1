@@ -11,19 +11,26 @@ class MessageRepository(context: Context) {
     suspend fun getMessages(): List<MessageEntity> {
         return try {
             val response = api.getMessages()
-
             val entities = response.map {
-                MessageEntity(it.id, it.title, it.body)
+                MessageEntity(
+                    id = it.id,
+                    title = it.title,
+                    body = it.body
+                )
             }
-
             dao.clearMessages()
             dao.insertMessages(entities)
-
-            Log.d("Repository", "Loaded from API")
             entities
+
         } catch (e: Exception) {
-            Log.d("Repository", "Loaded from DB")
-            dao.getAllMessages()
+            val cached = dao.getAllMessages()
+            cached
         }
+    }
+
+    suspend fun toggleLike(message: MessageEntity): MessageEntity {
+        val updated = message.copy(liked = !message.liked)
+        dao.updateMessage(updated)
+        return updated
     }
 }
